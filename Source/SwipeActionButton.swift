@@ -11,7 +11,7 @@ class SwipeActionButton: UIButton {
     var spacing: CGFloat = 8
     var shouldHighlight = true
     var highlightedBackgroundColor: UIColor?
-
+    
     var maximumImageHeight: CGFloat = 0
     var verticalAlignment: SwipeVerticalAlignment = .centerFirstBaseline
     
@@ -24,7 +24,7 @@ class SwipeActionButton: UIButton {
         let contentRect = self.contentRect(forBounds: bounds)
         let titleHeight = titleBoundingRect(with: verticalAlignment == .centerFirstBaseline ? CGRect.infinite.size : contentRect.size).integral.height
         let totalHeight = imageHeight + titleHeight + currentSpacing
-
+        
         return contentRect.center(size: CGSize(width: contentRect.width, height: totalHeight))
     }
     
@@ -40,17 +40,42 @@ class SwipeActionButton: UIButton {
     
     convenience init(action: SwipeAction) {
         self.init(frame: .zero)
-
+        
         contentHorizontalAlignment = .center
         
         tintColor = action.textColor ?? .white
         let highlightedTextColor = action.highlightedTextColor ?? tintColor
         highlightedBackgroundColor = action.highlightedBackgroundColor ?? UIColor.black.withAlphaComponent(0.1)
-
-        titleLabel?.font = action.font ?? UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
+        
+        var uiFont=UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
+        if UIDevice().userInterfaceIdiom == .phone {
+            switch UIScreen.main.nativeBounds.height {
+            case 1136:
+                uiFont=UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.medium)
+                //print("iPhone 5 or 5S or 5C")
+                break
+            case 1334:
+                uiFont=UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.medium)
+                //print("iPhone 6/6S/7/8")
+                break
+            case 1920, 2208:
+                //print("iPhone 6+/6S+/7+/8+")
+                break
+            case 2436:
+                uiFont=UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.medium)
+                //print("iPhone X")
+                break
+            default:
+                //print("unknown")
+                break
+            }
+        }
+        titleLabel?.font = action.font ?? uiFont
         titleLabel?.textAlignment = .center
-        titleLabel?.lineBreakMode = .byWordWrapping
-        titleLabel?.numberOfLines = 0
+        //titleLabel?.lineBreakMode = .byWordWrapping
+        titleLabel?.numberOfLines = 1
+        //titleLabel?.adjustsFontSizeToFitWidth = true
+        
         
         accessibilityLabel = action.accessibilityLabel
         
