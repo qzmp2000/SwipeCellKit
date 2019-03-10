@@ -92,10 +92,10 @@ open class SwipeTableViewCell: UITableViewCell {
         var view: UIView = self
         while let superview = view.superview {
             view = superview
-
+            
             if let tableView = view as? UITableView {
                 self.tableView = tableView
-
+                
                 swipeController.scrollView = tableView;
                 
                 tableView.panGestureRecognizer.removeTarget(self, action: nil)
@@ -120,9 +120,9 @@ open class SwipeTableViewCell: UITableViewCell {
     /// :nodoc:
     override open func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         guard let superview = superview else { return false }
-     
+        
         let point = convert(point, to: superview)
-
+        
         if !UIAccessibility.isVoiceOverRunning {
             for cell in tableView?.swipeCells ?? [] {
                 if (cell.state == .left || cell.state == .right) && !cell.contains(point: point) {
